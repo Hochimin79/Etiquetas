@@ -44,45 +44,18 @@
 
     // Escucha clics del usuario
     map.on('click', function(e) {
-  const lat = e.latlng.lat;
-  const lng = e.latlng.lng;
-
-  const contenedor = document.createElement('div');
-  contenedor.innerHTML = `
-    <label>Etiqueta:<br><input type="text" id="etiquetaTexto"></label><br>
-    <label>Categoría:<br>
-      <select id="etiquetaCategoria">
-        <option value="camara">Cámara</option>
-        <option value="alarma">Alarma</option>
-        <option value="wifi">Punto WiFi</option>
-        <option value="otro">Otro</option>
-      </select>
-    </label><br><br>
-    <button onclick="guardarEtiqueta(${lat}, ${lng})">Guardar</button>
-  `;
-
-  L.popup()
-    .setLatLng(e.latlng)
-    .setContent(contenedor)
-    .openOn(map);
-});
-
-function guardarEtiqueta(lat, lng) {
-  const texto = document.getElementById('etiquetaTexto').value;
-  const categoria = document.getElementById('etiquetaCategoria').value;
-
-  if (texto) {
-    database.ref('etiquetas').push({
-      lat: lat,
-      lng: lng,
-      texto: texto,
-      categoria: categoria
+      const lat = e.latlng.lat;
+      const lng = e.latlng.lng;
+      const texto = prompt("Escribe una etiqueta para esta ubicación:");
+      if (texto) {
+        // Guarda en Firebase
+        database.ref('etiquetas').push({
+          lat: lat,
+          lng: lng,
+          texto: texto
+        });
+      }
     });
-    map.closePopup();
-  } else {
-    alert("Escribe una etiqueta.");
-  }
-}
 
     // Cargar etiquetas desde Firebase en tiempo real
     database.ref('etiquetas').on('child_added', function(snapshot) {
